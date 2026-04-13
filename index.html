@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#003F2D"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="Jets Hub"/>
+<title>New York Jets Fan Hub</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f3f4f6;min-height:100vh}
+  .container{max-width:680px;margin:0 auto;padding:16px}
+  .header{background:#003F2D;border-radius:14px;padding:22px 20px 18px;color:#fff;margin-bottom:0}
+  .header-top{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+  .logo{width:50px;height:50px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#003F2D;letter-spacing:-1px;flex-shrink:0}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tab{padding:6px 14px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:500;background:rgba(255,255,255,0.18);color:#fff;transition:all 0.15s}
+  .tab.active{background:#fff;color:#003F2D}
+  .content{background:#fff;border:0.5px solid #e5e7eb;border-radius:0 0 14px 14px;padding:18px}
+  .content-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .content-title{font-size:16px;font-weight:500;color:#111}
+  .refresh-btn{font-size:12px;padding:4px 10px;border:0.5px solid #d1d5db;border-radius:6px;background:transparent;cursor:pointer;color:#6b7280}
+  .spinner{display:flex;align-items:center;gap:10;padding:2rem 0}
+  .spin{width:18px;height:18px;border:2.5px solid #ddd;border-top:2.5px solid #00A86B;border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .spin-text{font-size:13px;color:#6b7280;margin-left:10px}
+  .error-box{background:#fff0f0;border:0.5px solid #fca5a5;border-radius:10px;padding:14px;margin-top:8px}
+  .error-title{font-size:13px;color:#991b1b;font-weight:500;margin-bottom:4px}
+  .error-msg{font-size:12px;color:#7f1d1d;font-family:monospace;word-break:break-all;margin-bottom:10px}
+  .retry-btn{font-size:12px;padding:4px 12px;border:0.5px solid #fca5a5;border-radius:6px;background:#fff;cursor:pointer;color:#991b1b}
+  /* News */
+  .news-item{border-bottom:0.5px solid #e5e7eb;padding-bottom:14px;margin-bottom:14px;position:relative}
+  .news-title{font-weight:500;font-size:15px;color:#111;padding-right:60px;margin-bottom:4px}
+  .news-summary{font-size:13px;color:#6b7280;line-height:1.6;margin-bottom:6px}
+  .news-meta{display:flex;gap:8px;font-size:12px}
+  .news-date{color:#00A86B;font-weight:500}
+  /* Games */
+  .game-card{background:#f9fafb;border-radius:10px;padding:12px 16px;margin-bottom:10px}
+  .game-row{display:flex;justify-content:space-between;align-items:center}
+  .game-team{text-align:center;flex:1}
+  .game-team-name{font-size:12px;color:#6b7280}
+  .game-score-win{font-size:22px;font-weight:700;color:#00A86B}
+  .game-score-loss{font-size:22px;font-weight:700;color:#E24B4A}
+  .game-score-opp{font-size:22px;font-weight:700;color:#111}
+  .game-center{text-align:center;flex:1;font-size:12px;color:#6b7280}
+  .game-note{font-size:11px;color:#9ca3af;text-align:center;margin-top:4px}
+  /* Draft */
+  .draft-item{display:flex;gap:12px;padding:12px 0;border-bottom:0.5px solid #e5e7eb;position:relative}
+  .draft-badge{min-width:42px;height:42px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0}
+  .draft-name{font-weight:500;font-size:15px;color:#111;margin-bottom:2px}
+  .draft-info{font-size:13px;color:#6b7280;margin-bottom:2px}
+  .draft-note-confirm{font-size:12px;color:#00A86B}
+  .draft-note-rumor{font-size:12px;color:#BA7517}
+  /* Free Agents */
+  .agent-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:0.5px solid #e5e7eb}
+  .agent-name{font-weight:500;font-size:15px;color:#111;margin-bottom:2px}
+  .agent-info{font-size:13px;color:#6b7280}
+  .badge{font-size:12px;font-weight:500;padding:3px 10px;border-radius:20px}
+  /* Roster */
+  .roster-card{background:#f9fafb;border-radius:10px;padding:12px 14px;display:flex;gap:12px;align-items:center;margin-bottom:10px;position:relative}
+  .roster-num{min-width:38px;height:38px;background:#003F2D;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px}
+  .roster-name{font-weight:500;font-size:14px;color:#111}
+  .roster-pos{font-size:12px;color:#6b7280}
+  .roster-note{font-size:12px;color:#00A86B;margin-top:2px}
+  /* IG button */
+  .ig-btn{position:absolute;top:8px;right:0;font-size:11px;padding:3px 8px;background:transparent;border:0.5px solid #d1d5db;border-radius:6px;cursor:pointer;color:#6b7280}
+  /* Modal */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px}
+  .modal{background:#fff;border-radius:16px;padding:22px;max-width:380px;width:100%}
+  .modal-header{display:flex;justify-content:space-between;margin-bottom:14px}
+  .modal-title{font-weight:500;font-size:15px}
+  .modal-close{background:none;border:none;cursor:pointer;font-size:22px;line-height:1;color:#6b7280}
+  .ig-preview{background:#fafafa;border:0.5px solid #e5e7eb;border-radius:10px;padding:14px;margin-bottom:12px}
+  .ig-user{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+  .ig-avatar{width:34px;height:34px;background:#003F2D;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:11px}
+  .ig-username{font-weight:500;font-size:13px;color:#222}
+  .ig-img{background:#003F2D;border-radius:8px;height:100px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:28px}
+  .ig-caption{font-size:13px;line-height:1.6;color:#222;margin-bottom:6px}
+  .ig-tags{font-size:12px;color:#3897f0;margin-bottom:6px}
+  .ig-cta{font-size:12px;color:#888}
+  .copy-btn{width:100%;padding:10px;background:#003F2D;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500}
+  @media(max-width:480px){
+    .container{padding:8px}
+    .header{border-radius:12px}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">NYJ</div>
+      <div>
+        <div style="font-size:20px;font-weight:700">New York Jets</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.7)">Fan Hub · Live Updates · 2026</div>
+      </div>
+    </div>
+    <div class="tabs" id="tabs"></div>
+  </div>
+
+  <div class="content">
+    <div class="content-header">
+      <div class="content-title" id="section-title">News</div>
+      <button class="refresh-btn" onclick="refresh()">↻ Refresh</button>
+    </div>
+    <div id="content-area"></div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal" style="display:none" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title">Instagram Post</span>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+const TABS = ["News","Games","NFL Draft","Free Agents","Roster"];
+const JETS_GREEN = "#003F2D";
+let activeTab = "News";
+let store = {};
+let loadState = {};
+
+const PROMPTS = {
+  News:`Search the web for the 5 latest New York Jets news headlines from 2026. Sources: ESPN, NFL.com, NJ.com, The Athletic, ProFootballTalk. Reply ONLY with this exact JSON, no extra text: {"items":[{"title":"headline","summary":"2 sentence summary","date":"Apr DD 2026","source":"ESPN"}]}`,
+  Games:`Search the web for New York Jets 2025 NFL season final results and any 2026 schedule info. Reply ONLY with this exact JSON: {"items":[{"opponent":"Team Name","jetsScore":"21","oppScore":"14","date":"Jan 5 2026","status":"final","jetsWin":true,"note":"brief note"}]}`,
+  "NFL Draft":`Search the web for New York Jets 2026 NFL Draft picks confirmed and rumors/mock drafts. Reply ONLY with this exact JSON: {"items":[{"round":"1","player":"Player Name","position":"DE","college":"University","note":"confirmed OR rumor: source says..."}]}`,
+  "Free Agents":`Search the web for New York Jets 2026 free agency signings, cuts and rumors. Reply ONLY with this exact JSON: {"items":[{"name":"Player Name","position":"WR","status":"signed","details":"2yr $20M deal"}]}`,
+  Roster:`Search the web for key New York Jets players on the 2026 roster. Reply ONLY with this exact JSON: {"items":[{"name":"Player Name","number":"10","position":"QB","note":"brief note"}]}`
+};
+
+async function callAPI(prompt) {
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "x-api-key": "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",
+      "anthropic-version":"2023-06-01",
+      "anthropic-beta":"interleaved-thinking-2025-05-14"
+    },
+    body: JSON.stringify({
+      model:"claude-sonnet-4-20250514",
+      max_tokens:2000,
+      tools:[{type:"web_search_20250305",name:"web_search"}],
+      messages:[{role:"user",content:prompt}]
+    })
+  });
+  const data = await res.json();
+  if (!res.ok || data.error) throw new Error(data.error?.message || "API error "+res.status);
+  return (data.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("\n");
+}
+
+function parseJSON(raw) {
+  try {
+    const clean = raw.replace(/```json|```/g,"").trim();
+    const s = clean.indexOf("{"), e = clean.lastIndexOf("}");
+    if(s===-1||e===-1) return null;
+    return JSON.parse(clean.slice(s,e+1));
+  } catch(e){ return null; }
+}
+
+function showSpinner(msg) {
+  document.getElementById("content-area").innerHTML = `
+    <div class="spinner">
+      <div class="spin"></div>
+      <span class="spin-text">${msg||"Loading..."}</span>
+    </div>`;
+}
+
+function showError(msg, section) {
+  document.getElementById("content-area").innerHTML = `
+    <div class="error-box">
+      <div class="error-title">Could not load data</div>
+      <div class="error-msg">${msg}</div>
+      <button class="retry-btn" onclick="loadSection('${section}',true)">Try again</button>
+    </div>`;
+}
+
+function igBtn(item) {
+  return `<button class="ig-btn" onclick='openIG(${JSON.stringify(JSON.stringify(item))})'>📱 IG</button>`;
+}
+
+function renderNews(items) {
+  return items.map(item=>`
+    <div class="news-item">
+      ${igBtn(item)}
+      <div class="news-title">${item.title}</div>
+      <div class="news-summary">${item.summary}</div>
+      <div class="news-meta">
+        <span class="news-date">${item.date||""}</span>
+        ${item.source?`<span style="color:#9ca3af">· ${item.source}</span>`:""}
+      </div>
+    </div>`).join("");
+}
+
+function renderGames(items) {
+  return items.map(item=>{
+    const isUpcoming = item.status==="upcoming";
+    return `<div class="game-card">
+      <div class="game-row">
+        <div class="game-team">
+          <div class="game-team-name">Jets</div>
+          ${!isUpcoming?`<div class="${item.jetsWin?'game-score-win':'game-score-loss'}">${item.jetsScore}</div>`:""}
+        </div>
+        <div class="game-center">
+          <div>${isUpcoming?"upcoming":"final"}</div>
+          <div>${item.date||""}</div>
+        </div>
+        <div class="game-team">
+          <div class="game-team-name">${item.opponent}</div>
+          ${!isUpcoming?`<div class="game-score-opp">${item.oppScore}</div>`:""}
+        </div>
+      </div>
+      ${item.note?`<div class="game-note">${item.note}</div>`:""}
+    </div>`;
+  }).join("");
+}
+
+function renderDraft(items) {
+  return items.map(item=>{
+    const isRumor = (item.note||"").toLowerCase().includes("rumor");
+    return `<div class="draft-item">
+      <div class="draft-badge" style="background:${isRumor?'#BA7517':JETS_GREEN}">${isRumor?"?":"R"+item.round}</div>
+      <div style="padding-right:60px">
+        <div class="draft-name">${item.player}</div>
+        <div class="draft-info">${item.position} · ${item.college}</div>
+        ${item.note?`<div class="${isRumor?'draft-note-rumor':'draft-note-confirm'}">${item.note}</div>`:""}
+      </div>
+      ${igBtn(item)}
+    </div>`;
+  }).join("");
+}
+
+function renderAgents(items) {
+  const colors = {signed:"#00A86B",released:"#E24B4A",rumor:"#BA7517"};
+  return items.map(item=>{
+    const c = colors[item.status]||"#888";
+    return `<div class="agent-item">
+      <div>
+        <div class="agent-name">${item.name}</div>
+        <div class="agent-info">${item.position}${item.details?" · "+item.details:""}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="badge" style="background:${c}22;color:${c}">${item.status}</span>
+        <button class="ig-btn" style="position:static" onclick='openIG(${JSON.stringify(JSON.stringify(item))})'>📱</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function renderRoster(items) {
+  return items.map(item=>`
+    <div class="roster-card">
+      <div class="roster-num">#${item.number||"?"}</div>
+      <div>
+        <div class="roster-name">${item.name}</div>
+        <div class="roster-pos">${item.position}</div>
+        ${item.note?`<div class="roster-note">${item.note}</div>`:""}
+      </div>
+      ${igBtn(item)}
+    </div>`).join("");
+}
+
+function renderSection(section, items) {
+  const renderers = {News:renderNews,Games:renderGames,"NFL Draft":renderDraft,"Free Agents":renderAgents,Roster:renderRoster};
+  document.getElementById("content-area").innerHTML = renderers[section](items);
+}
+
+async function loadSection(section, force) {
+  if (store[section] && !force) { renderSection(section, store[section]); return; }
+  loadState[section] = "loading";
+  showSpinner(`Searching latest ${section} news…`);
+  try {
+    const raw = await callAPI(PROMPTS[section]);
+    const parsed = parseJSON(raw);
+    if (!parsed||!parsed.items||!parsed.items.length) throw new Error("Empty response: "+raw.slice(0,200));
+    store[section] = parsed.items;
+    loadState[section] = "done";
+    renderSection(section, parsed.items);
+  } catch(e) {
+    loadState[section] = "error";
+    showError(e.message, section);
+  }
+}
+
+function setTab(t) {
+  activeTab = t;
+  document.getElementById("section-title").textContent = t;
+  document.querySelectorAll(".tab").forEach(el => el.classList.toggle("active", el.dataset.tab===t));
+  loadSection(t);
+}
+
+function refresh() { delete store[activeTab]; loadSection(activeTab, true); }
+
+function openIG(jsonStr) {
+  const item = JSON.parse(jsonStr);
+  document.getElementById("modal").style.display = "flex";
+  document.getElementById("modal-body").innerHTML = `<div class="spinner"><div class="spin"></div><span class="spin-text">Generating post…</span></div>`;
+  const subject = item.title||item.player||item.name||"Jets news";
+  callAPI(`Create a New York Jets Instagram post about: "${subject}". Details: ${JSON.stringify(item)}.
+Reply ONLY with this JSON: {"caption":"engaging caption","hashtags":["#NewYorkJets","#TakeFlight"],"cta":"follow us"}`)
+    .then(raw => {
+      const post = parseJSON(raw) || {caption:"✈️ Let's Go Jets!",hashtags:["#NewYorkJets","#TakeFlight","#NFL"],cta:"Follow for more Jets updates!"};
+      document.getElementById("modal-body").innerHTML = `
+        <div class="ig-preview">
+          <div class="ig-user">
+            <div class="ig-avatar">NYJ</div>
+            <div class="ig-username">newyorkjets</div>
+          </div>
+          <div class="ig-img">✈️</div>
+          <div class="ig-caption">${post.caption}</div>
+          <div class="ig-tags">${(post.hashtags||[]).join(" ")}</div>
+          <div class="ig-cta">${post.cta}</div>
+        </div>
+        <button class="copy-btn" id="copy-btn">Copy to clipboard</button>`;
+      document.getElementById("copy-btn").onclick = () => {
+        navigator.clipboard?.writeText(`${post.caption}\n\n${(post.hashtags||[]).join(" ")}\n\n${post.cta}`);
+        document.getElementById("copy-btn").textContent = "Copied! ✓";
+      };
+    })
+    .catch(e => {
+      document.getElementById("modal-body").innerHTML = `<div class="error-box"><div class="error-title">Error</div><div class="error-msg">${e.message}</div></div>`;
+    });
+}
+
+function closeModal() { document.getElementById("modal").style.display = "none"; }
+
+// Init tabs
+const tabsEl = document.getElementById("tabs");
+TABS.forEach(t => {
+  const btn = document.createElement("button");
+  btn.className = "tab" + (t===activeTab?" active":"");
+  btn.dataset.tab = t;
+  btn.textContent = t;
+  btn.onclick = () => setTab(t);
+  tabsEl.appendChild(btn);
+});
+
+loadSection("News");
+</script>
+</body>
+</html>
