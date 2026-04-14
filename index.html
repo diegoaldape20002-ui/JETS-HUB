@@ -113,18 +113,12 @@ let store = {};
 let loadState = {};
 
 const PROMPTS = {
-  News:`Search the web for the 5 most recent New York Jets news from April 2026, ordered newest to oldest. Include breaking news, trades, injuries, signings. Find a relevant image URL for each. Reply ONLY with JSON:
-{"items":[{"title":"...","summary":"2 sentences","date":"Apr DD 2026","source":"ESPN","image":"https://...","breaking":true}]}`,
-  Games:`Search the web for New York Jets 2025 NFL season results and 2026 schedule. Reply ONLY with JSON:
-{"items":[{"opponent":"Team","oppLogo":"https://...","jetsScore":"21","oppScore":"14","date":"Jan 5 2026","status":"final","jetsWin":true,"note":"..."}]}`,
-  "NFL Draft":`Search the web for New York Jets 2026 NFL Draft picks and rumors/mock drafts. Reply ONLY with JSON:
-{"items":[{"round":"1","player":"Name","position":"DE","college":"University","note":"confirmed OR rumor: ...","image":"https://..."}]}`,
-  "Free Agents":`Search the web for New York Jets 2026 free agency signings, cuts and rumors. Reply ONLY with JSON:
-{"items":[{"name":"Player","position":"WR","status":"signed","details":"2yr $20M","image":"https://..."}]}`,
-  Roster:`Search the web for key New York Jets 2026 roster players with photos. Reply ONLY with JSON:
-{"items":[{"name":"Player","number":"10","position":"QB","note":"brief note","image":"https://..."}]}`,
-  "NFL News":`Search the web for the 6 most relevant recent NFL news from other teams in April 2026, newest first. Reply ONLY with JSON:
-{"items":[{"title":"...","summary":"2 sentences","team":"Chiefs","date":"Apr DD 2026","source":"ESPN","image":"https://...","breaking":false}]}`
+  News:`Search: latest NY Jets news April 2026. Return JSON only: {"items":[{"title":"...","summary":"...","date":"Apr DD","source":"ESPN","image":"","breaking":false}]}`,
+  Games:`Search: NY Jets 2025 season scores. Return JSON only: {"items":[{"opponent":"...","jetsScore":"0","oppScore":"0","date":"...","status":"final","jetsWin":true,"note":""}]}`,
+  "NFL Draft":`Search: NY Jets 2026 NFL Draft picks rumors. Return JSON only: {"items":[{"round":"1","player":"...","position":"...","college":"...","note":"...","image":""}]}`,
+  "Free Agents":`Search: NY Jets 2026 free agency moves. Return JSON only: {"items":[{"name":"...","position":"...","status":"signed","details":"...","image":""}]}`,
+  Roster:`Search: NY Jets 2026 key players roster. Return JSON only: {"items":[{"name":"...","number":"00","position":"...","note":"...","image":""}]}`,
+  "NFL News":`Search: NFL news other teams April 2026. Return JSON only: {"items":[{"title":"...","summary":"...","team":"...","date":"Apr DD","source":"ESPN","image":"","breaking":false}]}`
 };
 
 async function callAPI(prompt) {
